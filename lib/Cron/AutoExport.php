@@ -20,8 +20,8 @@ class AutoExport extends TimedJob {
 		private SessionService $sessionService
 	) {
 		parent::__construct($time);
-		// Run each day
-		$this->setInterval(24 * 60 * 60);
+		// Run each hour
+		$this->setInterval(60 * 60);
 	}
 
 	protected function run($argument): void {

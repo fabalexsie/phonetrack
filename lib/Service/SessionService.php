@@ -162,6 +162,21 @@ class SessionService {
 		date_default_timezone_set($dtz);
 		$userNames = [];
 
+		// last hour
+		$now = new DateTime();
+		$y = $now->format('Y');
+		$m = $now->format('m');
+		$d = $now->format('d');
+		$h = $now->format('H');
+
+		$dateMaxHour = new DateTime($y . '-' . $m . '-' . $d . ' ' . $h . ':00:00');
+		$maxHourTimestamp = $now->getTimestamp();
+		$minHourTimestamp = $maxHourTimestamp - 60 * 60;
+
+		$dateMaxHour->modify('-1 hour');
+		$hourlySuffix = '_hourly_' . $now->format('Y-m-d_H');
+		
+
 		// last day
 		$now = new DateTime();
 		$y = $now->format('Y');
@@ -214,6 +229,12 @@ class SessionService {
 		$minMonthTimestamp = $dateMonthMin->getTimestamp();
 		$monthlySuffix = '_monthly_' . $dateMonthMin->format('Y-m');
 
+		$hourFilters = [
+			'timestamp' => [
+				'min' => $minHourTimestamp,
+				'max' => $maxHourTimestamp,
+			],
+		];
 		$weekFilters = [
 			'timestamp' => [
 				'min' => $minWeekTimestamp,
@@ -250,7 +271,10 @@ class SessionService {
 				if ($dbexportType !== 'no') {
 					$suffix = $dailySuffix;
 					$filters = $dayFilters;
-					if ($dbexportType === 'weekly') {
+					if ($dbexportType === 'hourly') {
+						$suffix = $hourlySuffix;
+						$filters = $hourFilters;
+					} elseif ($dbexportType === 'weekly') {
 						$suffix = $weeklySuffix;
 						$filters = $weekFilters;
 					} elseif ($dbexportType === 'monthly') {
