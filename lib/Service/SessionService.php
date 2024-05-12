@@ -170,7 +170,7 @@ class SessionService {
 		$h = $now->format('H');
 
 		$dateMaxHour = new DateTime($y . '-' . $m . '-' . $d . ' ' . $h . ':00:00');
-		$maxHourTimestamp = $now->getTimestamp();
+		$maxHourTimestamp = $dateMaxHour->getTimestamp();
 		$minHourTimestamp = $maxHourTimestamp - 60 * 60;
 
 		$dateMaxHour->modify('-1 hour');
